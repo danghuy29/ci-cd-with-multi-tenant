@@ -19,8 +19,8 @@ runs:
         pnpm install
         pnpm build:${{env.BUILD_MODE}}
         ls -l dist
-    - name: Upload artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: "fstandard-artifact"
-        path: "dist"
+    # - name: Upload artifact
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: "fstandard-artifact"
+    #     path: "dist"
