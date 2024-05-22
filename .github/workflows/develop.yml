@@ -1,0 +1,31 @@
+name: deploy-DEV
+
+on:
+  push:
+    tags:
+      - dev-*
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  BUILD_MODE: "dev"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/build
+
+  deploy:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/deploy
