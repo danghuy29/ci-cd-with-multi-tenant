@@ -5,10 +5,10 @@ runs:
   using: "composite"
   steps:
     - uses: actions/checkout@v3
-    - name: Install pnpm
-      uses: pnpm/action-setup@v3
-      with:
-        version: 9
+    - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
     - uses: actions/setup-node@v3
       with:
         node-version: '20.3'
@@ -19,3 +19,8 @@ runs:
         pnpm install
         pnpm build:${{env.BUILD_MODE}}
         ls -l dist
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: "fstandard-artifact"
+        path: "dist"
