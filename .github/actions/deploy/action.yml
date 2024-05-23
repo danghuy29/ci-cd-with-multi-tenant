@@ -9,7 +9,7 @@ runs:
 
     - uses: actions/download-artifact@v4
       with:
-        name: "f1nn-front-artifact"
+        name: "fstandard-artifact"
         path: dist
 
     - name: Setup Python 3.7 for awscli
