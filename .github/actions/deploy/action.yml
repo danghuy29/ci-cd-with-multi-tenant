@@ -15,29 +15,27 @@ runs:
     - name: Setup Python 3.7 for awscli
       uses: actions/setup-python@v4
       with:
-        version: '3.7'
-        architecture: 'x64'
+        version: "3.7"
+        architecture: "x64"
 
-    # - name: Install awscli
-    #   shell: bash
-    #   run: pip install --upgrade pip awscli
+    - name: Install awscli
+      shell: bash
+      run: pip install --upgrade pip awscli
 
-    # - name: Configure AWS credentials
-    #   uses: aws-actions/configure-aws-credentials@v4
-    #   with:
-    #     role-to-assume: arn:aws:iam::${{env.AWS_IAM}}:role/s
-    #     aws-region: ap-northeast-1
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-southeast-1
 
-    # - name: Get caller identity AWS
-    #   shell: bash
-    #   run: aws sts get-caller-identity
+    - name: Deploy static site to S3 bucket
+      run: aws s3 sync --delete dist ${{env.S3_BUCKET}} --cache-control max-age=60,s-maxage=60
 
-    # - name: Uploading files
-    #   shell: bash
-    #   run: |
-    #     aws s3 sync --delete dist ${{env.S3_BUCKET}} --cache-control max-age=60,s-maxage=60
+    - name: Delete cf cache
+      shell: bash
+      run: |
+        aws cloudfront create-invalidation --distribution-id ${{env.CF_DIST_ID}} --paths "/*"
 
-    # - name: Delete cf cache
-    #   shell: bash
-    #   run: |
-    #     aws cloudfront create-invalidation --distribution-id ${{env.CF_DIST_ID}} --paths "/*"
+
+

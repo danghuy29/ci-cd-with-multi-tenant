@@ -3,23 +3,27 @@ description: "build action"
 
 runs:
   using: "composite"
+  
   steps:
     - uses: actions/checkout@v4
+
     - name: Install pnpm
       uses: pnpm/action-setup@v4
       with:
         version: 9
-        
+
     - uses: actions/setup-node@v4
       with:
-        node-version: '20.3'
-        cache: 'pnpm'
-    - name: Build ${{env.BUILD_MODE}}
+        node-version: "20.3"
+        cache: "pnpm"
+
+    - name: Build
       shell: bash
       run: |
         pnpm install
-        pnpm build:${{env.BUILD_MODE}}
+        pnpm build
         ls -l dist
+
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
