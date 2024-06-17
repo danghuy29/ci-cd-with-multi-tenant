@@ -30,6 +30,7 @@ runs:
         aws-region: ap-southeast-1
 
     - name: Deploy static site to S3 bucket
+      shell: bash
       run: aws s3 sync --delete dist ${{env.S3_BUCKET}} --cache-control max-age=60,s-maxage=60
 
     - name: Delete cf cache
