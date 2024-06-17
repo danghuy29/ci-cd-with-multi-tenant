@@ -12,6 +12,8 @@ permissions:
 env:
   CF_DIST_ID: 'E180JSU5L1WAE9'
   S3_BUCKET: 's3://s3-cicd-github-bucket'
+  AWS_ACCESS_KEY_ID: 'AKIAYPVFGMR72SMOJZMZ'
+  AWS_SECRET_ACCESS_KEY: 'JbGhOA2VAc/VF2KV/guGudhhmxWnUY1fj0AJi1uRs'
 
 jobs:
   build:
