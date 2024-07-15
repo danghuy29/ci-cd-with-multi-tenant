@@ -32,7 +32,7 @@ runs:
       shell: bash
       run: |
         echo "s3 from work flow ${{env.S3_BUCKET}}"
-      aws s3 sync --delete dist ${{env.S3_BUCKET}} --cache-control max-age=60,s-maxage=60
+        aws s3 sync --delete dist ${{env.S3_BUCKET}} --cache-control max-age=60,s-maxage=60
 
     - name: Delete cf cache
       shell: bash
