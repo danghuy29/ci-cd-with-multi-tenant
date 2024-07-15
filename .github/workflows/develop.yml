@@ -32,7 +32,7 @@ jobs:
       - name: Extract secrect from tag
         id: extract_secret
         run: |
-          CF_DIST_ID="${{ env.CLIENT_ID }}_CF_DIST_ID"
+          CF_DIST_ID=${{ secrets[format('{0}_CF_DIST_ID', env.CLIENT_ID)] }}
           echo "CF_DIST_ID=$CF_DIST_ID" >> $GITHUB_ENV
 
 
