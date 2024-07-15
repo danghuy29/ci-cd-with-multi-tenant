@@ -27,7 +27,11 @@ jobs:
         run: |
           TAG_NAME=$(echo $GITHUB_REF | sed 's|refs/tags/dev-||')
           CLIENT_ID=$(echo $TAG_NAME | sed 's|-.*||')
-          echo "CLIENT_ID=$CLIENT_ID" >> $GITHUB_ENV
+          CLIENT_ID_UPPER=$(echo $CLIENT_ID | tr '[:lower:]' '[:upper:]')
+          echo "CLIENT_ID=$CLIENT_ID_UPPER" >> $GITHUB_ENV
+     
+      - name: "Say Hello Mona it's Monday"
+        run: echo "Hello $CLIENT_ID"
     
       - name: Extract secrect from tag
         id: extract_secret
@@ -36,8 +40,6 @@ jobs:
           echo "CF_DIST_ID=$CF_DIST_ID" >> $GITHUB_ENV
 
 
-      - name: "Say Hello Mona it's Monday"
-        run: echo "Hello $CF_DIST_ID"
 
       - uses: ./.github/actions/build
 
