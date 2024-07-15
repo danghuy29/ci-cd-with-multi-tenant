@@ -35,6 +35,7 @@ runs:
     - name: Delete cf cache
       shell: bash
       run: |
+        echo "env from work flow $CF_DIST_ID"
         aws cloudfront create-invalidation --distribution-id ${{env.CF_DIST_ID}} --paths "/*"
 
 
