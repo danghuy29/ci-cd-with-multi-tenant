@@ -3,7 +3,7 @@ name: deploy-DEV
 on:
   push:
     tags:
-      - dev-*
+      - dev-*-*
 
 permissions:
   id-token: write
@@ -29,8 +29,14 @@ jobs:
           CLIENT_ID=$(echo $TAG_NAME | sed 's|-.*||')
           echo "CLIENT_ID=$CLIENT_ID" >> $GITHUB_ENV
     
+      - name: Extract secrect from tag
+        id: extract_secret
+        run: |
+          CF_DIST_ID=$(echo $TAG_NAME)
+
       - name: "Say Hello Mona it's Monday"
         run: echo "Hello $CLIENT_ID"
+
       # - uses: ./.github/actions/build
 
   # deploy:
