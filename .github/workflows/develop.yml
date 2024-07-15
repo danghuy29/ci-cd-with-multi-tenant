@@ -10,8 +10,8 @@ permissions:
   contents: read
 
 env:
-  CF_DIST_ID: 'E180JSU5L1WAE9'
-  S3_BUCKET: 's3://s3-cicd-github-bucket'
+  # CF_DIST_ID: 'E180JSU5L1WAE9'
+  # S3_BUCKET: 's3://s3-cicd-github-bucket'
   AWS_IAM_ROLE: ${{ secrets.AWS_IAM_ROLE }}
 
 jobs:
@@ -32,10 +32,12 @@ jobs:
       - name: Extract secrect from tag
         id: extract_secret
         run: |
-          CF_DIST_ID=$(echo $TAG_NAME)
+          CF_DIST_ID="${{ env.CLIENT_ID }}_CF_DIST_ID"
+          echo "CF_DIST_ID=$CF_DIST_ID" >> $GITHUB_ENV
+
 
       - name: "Say Hello Mona it's Monday"
-        run: echo "Hello $CLIENT_ID"
+        run: echo "Hello $CF_DIST_ID"
 
       # - uses: ./.github/actions/build
 
