@@ -28,6 +28,8 @@ jobs:
           TAG_NAME=$(echo $GITHUB_REF | sed 's|refs/tags/dev-||')
           echo "CLIENT_ID=$TAG_NAME" >> $GITHUB_ENV
     
+      - name: "Say Hello Mona it's Monday"
+        run: echo "Hello $CLIENT_ID"
       # - uses: ./.github/actions/build
 
   # deploy:
