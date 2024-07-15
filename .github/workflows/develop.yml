@@ -29,7 +29,7 @@ jobs:
           echo "CLIENT_ID=$TAG_NAME" >> $GITHUB_ENV
     
       - name: "Say Hello Mona it's Monday"
-        run: echo "Hello $CLIENT_ID"
+        run: echo "Hello $GITHUB_REF"
       # - uses: ./.github/actions/build
 
   # deploy:
