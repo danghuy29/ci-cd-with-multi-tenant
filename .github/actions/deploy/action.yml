@@ -44,12 +44,12 @@ runs:
     - name: Deploy static site to S3 bucket
       shell: bash
       run: |
-        aws s3 sync --delete dist ${{env.S3_BUCKET}} --cache-control max-age=60,s-maxage=60
+        aws s3 sync --delete dist ${{input.S3_BUCKET}} --cache-control max-age=60,s-maxage=60
 
     - name: Delete cf cache
       shell: bash
       run: |
-        aws cloudfront create-invalidation --distribution-id ${{env.CF_DIST_ID}} --paths "/*"
+        aws cloudfront create-invalidation --distribution-id ${{input.CF_DIST_ID}} --paths "/*"
 
 
 
