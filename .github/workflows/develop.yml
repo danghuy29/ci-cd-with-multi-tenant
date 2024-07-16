@@ -11,7 +11,7 @@ permissions:
 
 env:
   # CF_DIST_ID: 'E180JSU5L1WAE9'
-    # S3_BUCKET: 's3://s3-cicd-github-bucket'
+  # S3_BUCKET: 's3://s3-cicd-github-bucket'
   AWS_IAM_ROLE: ${{ secrets.AWS_IAM_ROLE }}
 
 jobs:
@@ -21,28 +21,6 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      # - name: Extract client from tag
-      #   id: extract_client
-      #   run: |
-      #     TAG_NAME=$(echo $GITHUB_REF | sed 's|refs/tags/dev-||')
-      #     CLIENT_ID=$(echo $TAG_NAME | sed 's|-.*||')
-      #     CLIENT_ID_UPPER=$(echo $CLIENT_ID | tr '[:lower:]' '[:upper:]')
-      #     echo "CLIENT_ID=$CLIENT_ID_UPPER" >> $GITHUB_ENV
- 
-      # - name: Extract secrect from tag
-      #   id: extract_secret
-      #   run: |
-      #     CF_DIST_ID=${{ secrets[format('{0}_CF_DIST_ID', env.CLIENT_ID)] }}
-      #     echo "CF_DIST_ID=$CF_DIST_ID" >> $GITHUB_ENV
-      #     S3_BUCKET=${{ secrets[format('{0}_S3_BUCKET', env.CLIENT_ID)] }}
-      #     echo "S3_BUCKET=$S3_BUCKET" >> $GITHUB_ENV
-
-      # - name: "Log secret key from workflow"
-      #   run: |
-      #     echo "Secret CF dist ${{env.CF_DIST_ID}}"
-      #     echo "Secret S3 dist ${{env.S3_BUCKET}}"
-
       - uses: ./.github/actions/build
 
   deploy:
@@ -52,4 +30,29 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Extract client from tag
+        id: extract_client
+        run: |
+          TAG_NAME=$(echo $GITHUB_REF | sed 's|refs/tags/dev-||')
+          CLIENT_ID=$(echo $TAG_NAME | sed 's|-.*||')
+          CLIENT_ID_UPPER=$(echo $CLIENT_ID | tr '[:lower:]' '[:upper:]')
+          echo "CLIENT_ID=$CLIENT_ID_UPPER" >> $GITHUB_ENV
+
+      - name: Extract secrect from tag
+        id: extract_secret
+        run: |
+          CF_DIST_ID=${{ secrets[format('{0}_CF_DIST_ID', env.CLIENT_ID)] }}
+          echo "CF_DIST_ID=$CF_DIST_ID" >> $GITHUB_ENV
+          S3_BUCKET=${{ secrets[format('{0}_S3_BUCKET', env.CLIENT_ID)] }}
+          echo "S3_BUCKET=$S3_BUCKET" >> $GITHUB_ENV
+
+      - name: "Log secret key from workflow"
+        run: |
+          echo "Secret CF dist ${{env.CF_DIST_ID}}"
+          echo "Secret S3 dist ${{env.S3_BUCKET}}"
+
       - uses: ./.github/actions/deploy
+        with:
+          CF_DIST_ID: $CF_DIST_ID
+          S3_BUCKET: $S3_BUCKET
