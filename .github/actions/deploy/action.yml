@@ -49,7 +49,7 @@ runs:
     - name: "Log secret key from deploy"
       shell: bash
       run: |
-        echo "Secret CF dist $CLIENT_ID"
+        echo "Secret CF dist ${{ secrets.AWS_IAM_ROLE }}"
         echo "Secret S3 dist"
 
     # - name: Deploy env
