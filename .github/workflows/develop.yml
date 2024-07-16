@@ -52,7 +52,7 @@ jobs:
           echo "VAR_CF_DIST_ID=$VAR_CF_DIST_ID" >> $GITHUB_ENV
       
       - name: Log variable
-        run: echo "The value is $VAR_CF_DIST_ID"
+        run: echo "The value is ${{vars.LAPUTA_CF_DIST_ID}}"
       
 
       - uses: ./.github/actions/deploy
