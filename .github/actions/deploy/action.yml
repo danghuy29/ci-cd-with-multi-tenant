@@ -28,11 +28,35 @@ runs:
         role-to-assume: ${{ env.AWS_IAM_ROLE }}
         aws-region: ap-northeast-1
 
-    - name: Deploy env
+    - name: Extract client from tag
+      shell: bash
+      id: extract_client
+      run: |
+        TAG_NAME=$(echo $GITHUB_REF | sed 's|refs/tags/dev-||')
+        CLIENT_ID=$(echo $TAG_NAME | sed 's|-.*||')
+        CLIENT_ID_UPPER=$(echo $CLIENT_ID | tr '[:lower:]' '[:upper:]')
+        echo "CLIENT_ID=$CLIENT_ID_UPPER" >> $GITHUB_ENV
+ 
+    - name: Extract secrect from tag
+      shell: bash
+      id: extract_secret
+      run: |
+        CF_DIST_ID=${{ secrets[format('{0}_CF_DIST_ID', env.CLIENT_ID)] }}
+        echo "CF_DIST_ID=$CF_DIST_ID" >> $GITHUB_ENV
+        S3_BUCKET=${{ secrets[format('{0}_S3_BUCKET', env.CLIENT_ID)] }}
+        echo "S3_BUCKET=$S3_BUCKET" >> $GITHUB_ENV
+
+    - name: "Log secret key from deploy"
       shell: bash
       run: |
         echo "Secret CF dist ${{env.CF_DIST_ID}}"
         echo "Secret S3 dist ${{env.S3_BUCKET}}"
+
+    # - name: Deploy env
+    #   shell: bash
+    #   run: |
+    #     echo "Secret CF dist ${{env.CF_DIST_ID}}"
+    #     echo "Secret S3 dist ${{env.S3_BUCKET}}"
 
     - name: Deploy static site to S3 bucket
       shell: bash
