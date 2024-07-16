@@ -10,8 +10,6 @@ permissions:
   contents: read
 
 env:
-  # CF_DIST_ID: 'E180JSU5L1WAE9'
-  # S3_BUCKET: 's3://s3-cicd-github-bucket'
   AWS_IAM_ROLE: ${{ secrets.AWS_IAM_ROLE }}
 
 jobs:
