@@ -48,15 +48,11 @@ jobs:
       - name: Extract variable from tag
         id: extract_variable
         run: |
-          CF_DIST_ID=${{ vars[format('{0}_CF_DIST_ID', env.CLIENT_ID)] }}
+          CF_DIST_ID=${{ secrets[format('{0}_CF_DIST_ID', env.CLIENT_ID)] }}
           echo "CF_DIST_ID=$CF_DIST_ID" >> $GITHUB_ENV
-          S3_BUCKET=${{ vars[format('{0}_S3_BUCKET', env.CLIENT_ID)] }}
+          S3_BUCKET=${{ secrets[format('{0}_S3_BUCKET', env.CLIENT_ID)] }}
           echo "S3_BUCKET=$S3_BUCKET" >> $GITHUB_ENV
-      
-      - name: Log variable
-        run: echo "The value is ${{vars.LAPUTA_CF_DIST_ID}}"
-      
-
+           
       - uses: ./.github/actions/deploy
         with:
           CF_DIST_ID: ${{env.CF_DIST_ID}}
