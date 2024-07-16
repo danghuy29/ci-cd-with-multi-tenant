@@ -29,6 +29,7 @@ runs:
         aws-region: ap-northeast-1
 
     - name: Deploy env
+      shell: bash
       run: |
         echo "Secret CF dist ${{env.CF_DIST_ID}}"
         echo "Secret S3 dist ${{env.S3_BUCKET}}"
