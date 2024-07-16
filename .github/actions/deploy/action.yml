@@ -16,7 +16,7 @@ runs:
       uses: actions/setup-python@v4
       with:
         version: "3.7"
-        architecture: "x64"
+        architecture: "x64"     
 
     - name: Install awscli
       shell: bash
@@ -28,16 +28,19 @@ runs:
         role-to-assume: ${{ env.AWS_IAM_ROLE }}
         aws-region: ap-northeast-1
 
+    - name: Deploy env
+      run: |
+        echo "Secret CF dist ${{env.CF_DIST_ID}}"
+        echo "Secret S3 dist ${{env.S3_BUCKET}}"
+
     - name: Deploy static site to S3 bucket
       shell: bash
       run: |
-        echo "s3 from work flow ${{env.S3_BUCKET}}"
         aws s3 sync --delete dist ${{env.S3_BUCKET}} --cache-control max-age=60,s-maxage=60
 
     - name: Delete cf cache
       shell: bash
       run: |
-        echo "cloudfront from work flow ${{env.CF_DIST_ID}}"
         aws cloudfront create-invalidation --distribution-id ${{env.CF_DIST_ID}} --paths "/*"
 
 
