@@ -13,26 +13,6 @@ env:
   AWS_IAM_ROLE: ${{ secrets.AWS_IAM_ROLE }}
 
 jobs:
-  job1:
-    runs-on: ubuntu-latest
-    # Map a step output to a job output
-    outputs:
-      output1: ${{ steps.step1.outputs.test }}
-      output2: ${{ steps.step2.outputs.test }}
-    steps:
-      - id: step1
-        run: echo "test=hello" >> "$GITHUB_OUTPUT"
-      - id: step2
-        run: echo "test=world" >> "$GITHUB_OUTPUT"
-  job2:
-    runs-on: ubuntu-latest
-    needs: job1
-    steps:
-      - env:
-          OUTPUT1: ${{needs.job1.outputs.output1}}
-          OUTPUT2: ${{needs.job1.outputs.output2}}
-        run: echo "$OUTPUT1 $OUTPUT2"
-
   prebuild:
     runs-on: ubuntu-latest
     outputs:
@@ -51,15 +31,15 @@ jobs:
           TAG_NAME=$(echo $GITHUB_REF | sed 's|refs/tags/dev-||')
           CLIENT_ID=$(echo $TAG_NAME | sed 's|-.*||')
           CLIENT_ID_UPPER=$(echo $CLIENT_ID | tr '[:lower:]' '[:upper:]')
-          echo "CLIENT_ID=$CLIENT_ID_UPPER" >> $GITHUB_OUTPUT
+          echo "CLIENT_ID=$CLIENT_ID_UPPER" >> "$GITHUB_OUTPUT"
   
       - name: Extract variable from tag
         id: extract_variable
         run: |
           CF_DIST_ID=${{ vars[format('{0}_CF_DIST_ID', env.CLIENT_ID)] }}
-          echo "CF_DIST_ID=$CF_DIST_ID" >> $GITHUB_OUTPUT
+          echo "CF_DIST_ID=$CF_DIST_ID" >> "$GITHUB_OUTPUT"
           S3_BUCKET=${{ vars[format('{0}_S3_BUCKET', env.CLIENT_ID)] }}
-          echo "S3_BUCKET=$S3_BUCKET" >> $GITHUB_OUTPUT
+          echo "S3_BUCKET=$S3_BUCKET" >> "$GITHUB_OUTPUT"
 
   build:
     needs: [prebuild]
