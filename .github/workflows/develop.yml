@@ -27,6 +27,7 @@ jobs:
           CLIENT_ID=$(echo $TAG_NAME | sed 's|-.*||')
           CLIENT_ID_UPPER=$(echo $CLIENT_ID | tr '[:lower:]' '[:upper:]')
           echo "test=$CLIENT_ID_UPPER" >> "$GITHUB_OUTPUT"
+          echo "CLIENT_ID=$CLIENT_ID_UPPER" >> "$GITHUB_ENV"
 
       - name: Extract CF_DIST_ID from tag
         id: extractCF
