@@ -21,7 +21,13 @@ jobs:
       output2: ${{ steps.step2.outputs.test }}
     steps:
       - id: step1
-        run: echo "test=hello" >> "$GITHUB_OUTPUT"
+        # run: echo "test=hello" >> "$GITHUB_OUTPUT"
+        run: |
+          TAG_NAME=$(echo $GITHUB_REF | sed 's|refs/tags/dev-||')
+          CLIENT_ID=$(echo $TAG_NAME | sed 's|-.*||')
+          CLIENT_ID_UPPER=$(echo $CLIENT_ID | tr '[:lower:]' '[:upper:]')
+          echo "test=$CLIENT_ID_UPPER" >> "$GITHUB_OUTPUT"
+
       - id: step2
         run: echo "test=world" >> "$GITHUB_OUTPUT"
 
@@ -31,10 +37,7 @@ jobs:
     steps:
       - name: log env
         run: echo "output is ${{needs.job1.outputs.output1}}  ${{needs.job1.outputs.output2}}"
-      # - env:
-      #     OUTPUT1: ${{needs.job1.outputs.output1}}
-      #     OUTPUT2:  ${{needs.job1.outputs.output1}}
-      #   run: echo "$OUTPUT1 $OUTPUT2"
+
 
 
   # prebuild:
