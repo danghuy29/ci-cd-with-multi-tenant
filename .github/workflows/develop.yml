@@ -56,7 +56,7 @@ jobs:
           fetch-depth: 0
 
       - name: Access environment variable
-        run: echo "The value of MY_ENV_VAR is $CF_DIST_ID and $S3_BUCKET"
+        run: echo "The value of MY_ENV_VAR is $GITHUB_ENV and $S3_BUCKET"
            
       - uses: ./.github/actions/deploy
         with:
