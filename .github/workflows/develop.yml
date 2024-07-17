@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
     
       - name: Use secret in job 1
         run: |
@@ -36,7 +36,7 @@ jobs:
     needs: [job1]
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
     
       - name: Use secret in job 2
         run: |
