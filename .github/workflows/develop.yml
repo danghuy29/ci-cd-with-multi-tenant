@@ -22,14 +22,18 @@ jobs:
 
   job1:
     runs-on: ubuntu-latest
+    outputs:
+      secret_value: ${{ steps.secret_step.outputs.S3_BUCKET }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
     
       - name: Use secret in job 1
+        id: secret_step
         run: |
           echo "SECRET VALUE: ${{ secrets.LAPUTA_S3_BUCKET }}"
-          echo "::set-output name=secret_value::${{ secrets.LAPUTA_S3_BUCKET }}"
+          echo "S3_BUCKET=${{ secrets.LAPUTA_S3_BUCKET }}" >> $GITHUB_OUTPUT
     
   job2:
     runs-on: ubuntu-latest
@@ -40,7 +44,7 @@ jobs:
     
       - name: Use secret in job 2
         run: |
-          echo "Secret passed from job1: ${{ needs.job1.outputs.secret_value }}"      
+          echo "Secret passed from job1: ${{ needs.job1.outputs.S3_BUCKET }}"      
 
   #   steps:
   #     - id: extract_clientId
