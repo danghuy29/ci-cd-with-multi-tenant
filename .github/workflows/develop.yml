@@ -30,12 +30,17 @@ jobs:
           echo "CLIENT_ID=$CLIENT_ID_UPPER" >> "$GITHUB_OUTPUT"
           echo "test=hello" >> "$GITHUB_OUTPUT"
 
+
+
       - id: extract_variable
         run: |
           CF_DIST_ID=${{ secrets[format('{0}_CF_DIST_ID', env.CLIENT_ID)] }}
-          echo "CF_DIST_ID=$CF_DIST_ID" >> "$GITHUB_OUTPUT"
+          echo "CF_DIST_ID=$CF_DIST_ID" >> "$GITHUB_ENV"
           S3_BUCKET=${{ secrets[format('{0}_S3_BUCKET', env.CLIENT_ID)] }}
-          echo "S3_BUCKET=$S3_BUCKET" >> "$GITHUB_OUTPUT"
+          echo "S3_BUCKET=$S3_BUCKET" >> "$GITHUB_ENV"
+          # Masked output to avoid exposure
+          echo "CF_DIST_ID=***" >> "$GITHUB_OUTPUT"
+          echo "S3_BUCKET=***" >> "$GITHUB_OUTPUT"       
 
   build:
     needs: [prebuild]
