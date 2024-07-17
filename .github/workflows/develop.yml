@@ -13,14 +13,14 @@ env:
   AWS_IAM_ROLE: ${{ secrets.AWS_IAM_ROLE }}
 
 jobs:
-  prebuild:
+  job1:
     runs-on: ubuntu-latest
     # Map a step output to a job output
     outputs:
       CLIENT_ID: ${{ steps.extract_client_id.outputs.CLIENT_ID }}
       CF_DIST_ID: ${{ steps.extract_variable.outputs.CF_DIST_ID }}
       S3_BUCKET: ${{ steps.extract_variable.outputs.S3_BUCKET }}
-      TEST: LALALA
+      output1: LALALA
 
     steps:
       - id: extract_client_id
@@ -37,12 +37,10 @@ jobs:
           echo "CF_DIST_ID=$CF_DIST_ID" >> "$GITHUB_OUTPUT"
           S3_BUCKET=${{ vars[format('{0}_S3_BUCKET', env.CLIENT_ID)] }}
           echo "S3_BUCKET=$S3_BUCKET" >> "$GITHUB_OUTPUT"
-          echo "output s3 ${{ vars[format('{0}_S3_BUCKET', env.CLIENT_ID)] }}"
-          echo "output CF ${{ vars[format('{0}_CF_DIST_ID', env.CLIENT_ID)] }}"
 
-  
+
   build:
-    needs: [prebuild]
+    needs: [job1]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -50,7 +48,7 @@ jobs:
           fetch-depth: 0
 
       - name: Check env CLIENT_ID
-        run: echo "The value of MY_ENV_VAR is  ${{ needs.prebuild.outputs.CLIENT_ID }} AND ${{ needs.prebuild.outputs.TEST }}"       
+        run: echo "The value of MY_ENV_VAR is  ${{ needs.prebuild.outputs.CLIENT_ID }} AND ${{needs.job1.outputs.output1}}"       
 
       - uses: ./.github/actions/build
         with:
