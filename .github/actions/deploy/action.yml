@@ -1,8 +1,10 @@
 name: "deploy"
 description: "deploy action"
 inputs:
-  CLIENT_ID:
+  CF_DIST_ID:
     required: true
+  S3_BUCKET:
+    required: true  
 
 runs:
   using: "composite"
@@ -14,15 +16,6 @@ runs:
       shell: bash
       run: |
         echo "Client id is ${{inputs.CLIENT_ID}}"  
-
-    - name: Extract secret
-      shell: bash
-      run: |
-        CF_DIST_ID=${{ secrets[format('{0}_CF_DIST_ID', inputs.CLIENT_ID)] }}
-        echo "CF_DIST_ID:: ${{CF_DIST_ID}} or $CF_DIST_ID"
-        S3_BUCKET=${{ secrets[format('{0}_S3_BUCKET', inputs.CLIENT_ID)] }}
-        echo ":S3_BUCKET: ${{S3_BUCKET}} or $S3_BUCKET"  
-
 
     - uses: actions/download-artifact@v4
       with:
