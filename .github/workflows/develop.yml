@@ -15,10 +15,10 @@ env:
 jobs:
   prebuild:
     runs-on: ubuntu-latest
-    outputs:
-      CLIENT_ID: ${{ steps.extract_clientId.outputs.CLIENT_ID }}
-      CF_DIST_ID: ${{ steps.extract_variable.outputs.CF_DIST_ID }}
-      S3_BUCKET: ${{ steps.extract_variable.outputs.S3_BUCKET }}
+    # outputs:
+    #   CLIENT_ID: ${{ steps.extract_clientId.outputs.CLIENT_ID }}
+    #   CF_DIST_ID: ${{ steps.extract_variable.outputs.CF_DIST_ID }}
+    #   S3_BUCKET: ${{ steps.extract_variable.outputs.S3_BUCKET }}
 
     steps:
       - id: extract_clientId
@@ -35,12 +35,12 @@ jobs:
       - id: extract_variable
         run: |
           CF_DIST_ID=${{ secrets[format('{0}_CF_DIST_ID', env.CLIENT_ID)] }}
-          echo "CF_DIST_ID=$CF_DIST_ID" >> "$GITHUB_ENV"
+          echo "::set-output name=CF_DIST_ID::$CF_DIST_ID"
+
           S3_BUCKET=${{ secrets[format('{0}_S3_BUCKET', env.CLIENT_ID)] }}
-          echo "S3_BUCKET=$S3_BUCKET" >> "$GITHUB_ENV"
-          # Masked output to avoid exposure
-          echo "CF_DIST_ID=***" >> "$GITHUB_OUTPUT"
-          echo "S3_BUCKET=***" >> "$GITHUB_OUTPUT"       
+          echo "::set-output name=S3_BUCKET::$S3_BUCKET"
+
+    
 
   build:
     needs: [prebuild]
