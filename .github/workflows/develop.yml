@@ -37,49 +37,27 @@ jobs:
           S3_BUCKET=${{ vars[format('{0}_S3_BUCKET', env.CLIENT_ID)] }}
           echo "S3_BUCKET=$S3_BUCKET" >> "$GITHUB_OUTPUT"
 
-  job2:
-    runs-on: ubuntu-latest
+  build:
     needs: [prebuild]
+    runs-on: ubuntu-latest
     steps:
-      - name: Log env
-        run: |
-          echo "S3 bucket is ${{needs.prebuild.outputs.S3_BUCKET}} "
-          echo "CF DIST is ${{needs.prebuild.outputs.CF_DIST_ID}} "
-          echo "CLIENT_ID is ${{needs.prebuild.outputs.CLIENT_ID}} "
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 
 
-      # - env:
-      #   OUTPUT1: ${{needs.prebuild.outputs.CLIENT_ID}}
-      #   OUTPUT2: ${{needs.prebuild.outputs.output2}}
-      #   run: echo "$OUTPUT1 $OUTPUT2"
+      - uses: ./.github/actions/build
+        with:
+          CLIENT_ID: ${{ needs.prebuild.outputs.CLIENT_ID }}
 
+  deploy:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-  # build:
-  #   needs: [job1]
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #       with:
-  #         fetch-depth: 0
-
-  #     - name: Check env CLIENT_ID
-  #       run: echo "The value of CLIENT_ID is ${{ needs.job1.outputs.CLIENT_ID }} and output1 is ${{ needs.job1.outputs.output1 }}"       
-
-  #     - uses: ./.github/actions/build
-  #       with:
-  #         CLIENT_ID: ${{ needs.job1.outputs.CLIENT_ID }}
-
-  # deploy:
-  #   needs: [build]
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #       with:
-  #         fetch-depth: 0
-
-  #     - name: Check env CF_DIST_ID and S3_BUCKET
-  #       run: echo "The value of CF_DIST_ID is ${{ needs.job1.outputs.CF_DIST_ID }} and S3_BUCKET is ${{ needs.job1.outputs.S3_BUCKET }}"
-
-  #     - uses: ./.github/actions/deploy
-  #       with:
-  #         CF_DIST_ID: ${{ needs.job1.outputs.CF_DIST_ID }}
-  #         S3_BUCKET: ${{ needs.job1.outputs.S3_BUCKET }}
+      - uses: ./.github/actions/deploy
+        with:
+          CF_DIST_ID: ${{ needs.prebuild.outputs.CF_DIST_ID }}
+          S3_BUCKET: ${{ needs.prebuild.outputs.S3_BUCKET }}
