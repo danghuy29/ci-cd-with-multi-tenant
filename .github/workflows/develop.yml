@@ -15,27 +15,30 @@ env:
 jobs:
   prebuild:
     runs-on: ubuntu-latest
+    # Map a step output to a job output
+    outputs:
+      CLIENT_ID: ${{ steps.extract_client_id.outputs.CLIENT_ID }}
+      CF_DIST_ID: ${{ steps.extract_variable.outputs.CF_DIST_ID }}
+      S3_BUCKET: ${{ steps.extract_variable.outputs.S3_BUCKET }}
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Extract client from tag
-        id: extract_client
+      - name: Extract client Id
+        id: extract_client_id
         run: |
           TAG_NAME=$(echo $GITHUB_REF | sed 's|refs/tags/dev-||')
           CLIENT_ID=$(echo $TAG_NAME | sed 's|-.*||')
           CLIENT_ID_UPPER=$(echo $CLIENT_ID | tr '[:lower:]' '[:upper:]')
-          echo "CLIENT_ID=$CLIENT_ID_UPPER" >> $GITHUB_ENV
-  
+          echo "CLIENT_ID=$CLIENT_ID_UPPER" >> "$GITHUB_OUTPUT"
+          echo "CLIENT_ID=$CLIENT_ID_UPPER" >> "$GITHUB_ENV"
+
       - name: Extract variable from tag
         id: extract_variable
         run: |
+          echo "kaslfkl;asfkl;asfkl; ${{format('{0}_CF_DIST_ID', env.CLIENT_ID)}}"
           CF_DIST_ID=${{ vars[format('{0}_CF_DIST_ID', env.CLIENT_ID)] }}
-          echo "CF_DIST_ID=$CF_DIST_ID" >> $GITHUB_ENV
+          echo "CF_DIST_ID=$CF_DIST_ID" >> "$GITHUB_OUTPUT"
           S3_BUCKET=${{ vars[format('{0}_S3_BUCKET', env.CLIENT_ID)] }}
-          echo "S3_BUCKET=$S3_BUCKET" >> $GITHUB_ENV
-
+          echo "S3_BUCKET=$S3_BUCKET" >> "$GITHUB_OUTPUT"
+  
   build:
     needs: [prebuild]
     runs-on: ubuntu-latest
@@ -45,7 +48,7 @@ jobs:
           fetch-depth: 0
       - uses: ./.github/actions/build
         with:
-          CLIENT_ID: $CLIENT_ID
+          CLIENT_ID: ${{ needs.prebuild.outputs.CLIENT_ID }}
 
   deploy:
     needs: [build]
@@ -60,5 +63,5 @@ jobs:
            
       - uses: ./.github/actions/deploy
         with:
-          CF_DIST_ID: $CF_DIST_ID
-          S3_BUCKET: $S3_BUCKET
+          CF_DIST_ID: ${{ needs.prebuild.outputs.CF_DIST_ID }}
+          S3_BUCKET: ${{ needs.prebuild.outputs.S3_BUCKET }}
