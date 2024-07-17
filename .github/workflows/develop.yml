@@ -43,7 +43,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0 
+          fetch-depth: 0
+
+      - name: Check - in work flow
+        run: |
+          echo "no space ${{needs.prebuild.outputs.CF_DIST_ID}} ${{needs.prebuild.outputs.S3_BUCKET}} ${{needs.prebuild.outputs.CLIENT_ID}}"
+          echo "has space ${{ needs.prebuild.outputs.CF_DIST_ID }} ${{ needs.prebuild.outputs.S3_BUCKET }} ${{ needs.prebuild.outputs.CLIENT_ID }}"
+  
 
       - uses: ./.github/actions/build
         with:
@@ -65,4 +71,15 @@ jobs:
       - uses: ./.github/actions/deploy
         with:
           CF_DIST_ID: ${{needs.prebuild.outputs.CF_DIST_ID}}
-          S3_BUCKET: ${{needs.prebuild.outputs.S3_BUCKET}}
+          S3_BUCKET:
+            ${{needs.prebuild.outputs.S3_BUCKET}}
+
+  # job2:
+  #   runs-on: ubuntu-latest
+  #   needs: [prebuild]
+  #   steps:
+  #     - name: Log env
+  #       run: |
+  #         echo "S3 bucket is ${{needs.prebuild.outputs.S3_BUCKET}} "
+  #         echo "CF DIST is ${{needs.prebuild.outputs.CF_DIST_ID}} "
+  #         echo "CLIENT_ID is ${{needs.prebuild.outputs.CLIENT_ID}} "
