@@ -16,12 +16,13 @@ jobs:
   prebuild:
     runs-on: ubuntu-latest
     outputs:
-      CLIENT_ID: ${{ steps.extract_client_id.outputs.CLIENT_ID }}
-      CF_DIST_ID: ${{ steps.extract_variable.outputs.CF_DIST_ID }}
-      S3_BUCKET: ${{ steps.extract_variable.outputs.S3_BUCKET }}
+      CLIENT_ID: ${{ steps.step1.outputs.CLIENT_ID }}
+      CF_DIST_ID: ${{ steps.step2.outputs.CF_DIST_ID }}
+      S3_BUCKET: ${{ steps.step2.outputs.S3_BUCKET }}
+      TEST: "LALALA"
 
     steps:
-      - id: extract_client_id
+      - id: step1
         run: |
           TAG_NAME=$(echo $GITHUB_REF | sed 's|refs/tags/dev-||')
           CLIENT_ID=$(echo $TAG_NAME | sed 's|-.*||')
@@ -29,7 +30,7 @@ jobs:
           echo "CLIENT_ID=$CLIENT_ID_UPPER" >> "$GITHUB_ENV"
           echo "CLIENT_ID=$CLIENT_ID_UPPER" >> "$GITHUB_OUTPUT"
 
-      - id: extract_variable
+      - id: step2
         run: |
           CF_DIST_ID=${{ secrets[format('{0}_CF_DIST_ID', env.CLIENT_ID)] }}
           echo "CF_DIST_ID=$CF_DIST_ID" >> "$GITHUB_OUTPUT"
@@ -44,6 +45,7 @@ jobs:
         run: |
           echo "S3 bucket ${{needs.prebuild.outputs.S3_BUCKET}} "
           echo "CF DIST ${{needs.prebuild.outputs.CF_DIST_ID}} "
+          echo "check  ${{needs.prebuild.outputs.TEST}} "
       # - env:
       #   OUTPUT1: ${{needs.prebuild.outputs.CLIENT_ID}}
       #   OUTPUT2: ${{needs.prebuild.outputs.output2}}
