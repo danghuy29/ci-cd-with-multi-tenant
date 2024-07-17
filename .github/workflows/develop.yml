@@ -37,6 +37,7 @@ jobs:
           echo "S3_BUCKET=$S3_BUCKET" >> $GITHUB_ENV
 
   build:
+    needs: [prebuild]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -44,7 +45,7 @@ jobs:
           fetch-depth: 0
       - uses: ./.github/actions/build
         with:
-          CLIENT_ID: ${{env.CLIENT_ID}}
+          CLIENT_ID: $CLIENT_ID
 
   deploy:
     needs: [build]
@@ -56,5 +57,5 @@ jobs:
            
       - uses: ./.github/actions/deploy
         with:
-          CF_DIST_ID: ${{env.CF_DIST_ID}}
-          S3_BUCKET: ${{env.S3_BUCKET}}
+          CF_DIST_ID: $CF_DIST_ID
+          S3_BUCKET: $S3_BUCKET
