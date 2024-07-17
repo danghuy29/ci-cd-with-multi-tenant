@@ -23,8 +23,7 @@ jobs:
       TEST: LALALA
 
     steps:
-      - name: Extract client Id
-        id: extract_client_id
+      - id: extract_client_id
         run: |
           TAG_NAME=$(echo $GITHUB_REF | sed 's|refs/tags/dev-||')
           CLIENT_ID=$(echo $TAG_NAME | sed 's|-.*||')
@@ -32,13 +31,13 @@ jobs:
           echo "CLIENT_ID=$CLIENT_ID_UPPER" >> "$GITHUB_OUTPUT"
           echo "CLIENT_ID=$CLIENT_ID_UPPER" >> "$GITHUB_ENV"
 
-      - name: Extract variable from tag
-        id: extract_variable
+      - id: extract_variable
         run: |
           CF_DIST_ID=${{ vars[format('{0}_CF_DIST_ID', env.CLIENT_ID)] }}
           echo "CF_DIST_ID=$CF_DIST_ID" >> "$GITHUB_OUTPUT"
           S3_BUCKET=${{ vars[format('{0}_S3_BUCKET', env.CLIENT_ID)] }}
           echo "S3_BUCKET=$S3_BUCKET" >> "$GITHUB_OUTPUT"
+          echo "output  ${{ steps.extract_variable.outputs.S3_BUCKET }}"
   
   build:
     needs: [prebuild]
