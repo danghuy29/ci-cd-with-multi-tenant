@@ -31,6 +31,7 @@ jobs:
       - name: Extract CF_DIST_ID from tag
         id: extractCF
         run: |
+          echo "kaslfkl;asfkl;asfkl; ${{format('{0}_CF_DIST_ID', env.CLIENT_ID)}}"
           CF_DIST_ID=${{ vars[format('{0}_CF_DIST_ID', env.CLIENT_ID)] }}
           echo "test=$CF_DIST_ID" >> "$GITHUB_OUTPUT"
 
