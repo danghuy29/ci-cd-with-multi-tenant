@@ -1,5 +1,9 @@
 name: "build"
 description: "build action"
+inputs:
+  CLIENT_ID:
+    description: 'Client id'
+    required: true
 
 runs:
   using: "composite"
@@ -16,6 +20,10 @@ runs:
       with:
         node-version: "20.3"
         cache: "pnpm"
+
+    - name: LOG CLIENT ID 
+      shell: bash
+      run: echo "Client id is ${{inputs.CLIENT_ID}}"    
 
     - name: Build
       shell: bash

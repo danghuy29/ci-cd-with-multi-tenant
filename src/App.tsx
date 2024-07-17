@@ -17,8 +17,7 @@ function App() {
         </a>
       </div>
       <h1>Vite + React</h1>
-      <h2>Deploy from {import.meta.env.TENANT} LAPUTA</h2>
-      <h3>Testing with diffrent CF</h3>
+      <h3>testing with get client in build</h3>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
