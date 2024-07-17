@@ -60,18 +60,16 @@ jobs:
 
       - name: Extract secret
         run: |
-            # CF_DIST_ID=${{ secrets[format('{0}_CF_DIST_ID', needs.prebuild.outputs.CLIENT_ID)] }}
-            echo "get client id ${{env.CLIENT_ID}}"
             CF_DIST_ID=${{ secrets[format('{0}_CF_DIST_ID', env.CLIENT_ID)] }}
             S3_BUCKET=${{ secrets[format('{0}_S3_BUCKET', env.CLIENT_ID)] }}
 
-            echo "CF_DIST_ID:: $CF_DIST_ID"
-            echo "S3_BUCKET:: $S3_BUCKET"  
+            echo "CF_DIST_ID=$CF_DIST_ID" >> $GITHUB_ENV
+            echo "S3_BUCKET=$S3_BUCKET" >> $GITHUB_ENV
             
       - uses: ./.github/actions/deploy
         with:
-          CF_DIST_ID: ${{needs.prebuild.outputs.CLIENT_ID}}
-          S3_BUCKET: ${{needs.prebuild.outputs.CLIENT_ID}}
+          CF_DIST_ID: ${{env.CF_DIST_ID}}
+          S3_BUCKET: ${{env.S3_BUCKET}}
 
 
 
