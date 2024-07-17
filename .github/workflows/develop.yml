@@ -24,17 +24,6 @@ jobs:
           CLIENT_ID=$(echo $TAG_NAME | sed 's|-.*||')
           CLIENT_ID_UPPER=$(echo $CLIENT_ID | tr '[:lower:]' '[:upper:]')
           echo "CLIENT_ID=$CLIENT_ID_UPPER" >> "$GITHUB_OUTPUT"
-          
-          
-          
-      #   echo "CLIENT_ID=$CLIENT_ID_UPPER" >> "$GITHUB_ENV"
-      # - id: extract_variable
-      #   run: |
-      #     CF_DIST_ID=${{ secrets[format('{0}_CF_DIST_ID', env.CLIENT_ID)] }}
-      #     echo "::set-output name=CF_DIST_ID::$CF_DIST_ID"
-
-      #     S3_BUCKET=${{ secrets[format('{0}_S3_BUCKET', env.CLIENT_ID)] }}
-      #     echo "::set-output name=S3_BUCKET::$S3_BUCKET"      
   
   build:
     needs: [prebuild]
@@ -62,7 +51,6 @@ jobs:
         run: |
             CF_DIST_ID=${{ secrets[format('{0}_CF_DIST_ID', env.CLIENT_ID)] }}
             S3_BUCKET=${{ secrets[format('{0}_S3_BUCKET', env.CLIENT_ID)] }}
-
             echo "CF_DIST_ID=$CF_DIST_ID" >> $GITHUB_ENV
             echo "S3_BUCKET=$S3_BUCKET" >> $GITHUB_ENV
             

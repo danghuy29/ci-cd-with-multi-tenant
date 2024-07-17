@@ -22,12 +22,6 @@ runs:
         name: "fstandard-artifact"
         path: dist
 
-    - name: Log secrets
-      shell: bash
-      run: |
-        echo  "S3_BUCKET is ${{inputs.S3_BUCKET}}"
-        echo  "CF_DIST_ID is ${{inputs.CF_DIST_ID}}"
-
     - name: Setup Python 3.7 for awscli
       uses: actions/setup-python@v4
       with:
