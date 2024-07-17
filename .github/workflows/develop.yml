@@ -15,6 +15,11 @@ env:
 jobs:
   prebuild:
     runs-on: ubuntu-latest
+    outputs:
+      CLIENT_ID: ${{ steps.extract_client.outputs.PR_NUMBER }}
+      CF_DIST_ID: ${{ steps.extract_variable.outputs.CF_DIST_ID }}
+      S3_BUCKET: ${{ steps.extract_variable.outputs.S3_BUCKET }}
+
     steps:
       - uses: actions/checkout@v4
         with:
@@ -55,8 +60,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Access environment variable
-        run: echo "The value of MY_ENV_VAR is $GITHUB_ENV and $S3_BUCKET"
+      - name: Log variable from env
+        run: |
+          echo "Log variable CF_DIST_ID is ${{ needs.prebuild.outputs.CF_DIST_ID }}"
+          echo "Log variable S3_BUCKET is ${{ needs.prebuild.outputs.S3_BUCKET }}"
            
       - uses: ./.github/actions/deploy
         with:
