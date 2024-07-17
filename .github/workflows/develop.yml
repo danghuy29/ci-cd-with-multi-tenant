@@ -54,6 +54,9 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Access environment variable
+        run: echo "The value of MY_ENV_VAR is $CF_DIST_ID and $S3_BUCKET"
            
       - uses: ./.github/actions/deploy
         with:
