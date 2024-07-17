@@ -55,15 +55,17 @@ jobs:
   deploy:
     needs: [build]
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Log variable from env
-        run: |
-          echo "Log variable CF_DIST_ID is ${{ needs.prebuild.outputs.CF_DIST_ID }}"
-          echo "Log variable S3_BUCKET is ${{ needs.prebuild.outputs.S3_BUCKET }}"
+      - env:
+          OUTPUT1: ${{needs.prebuild.outputs.CF_DIST_ID}}
+          OUTPUT2: ${{needs.prebuild.outputs.S3_BUCKET}}    
+        run: echo "output is $OUTPUT1 $OUTPUT2"
+
            
       - uses: ./.github/actions/deploy
         with:
