@@ -2,10 +2,8 @@ name: "deploy"
 description: "deploy action"
 inputs:
   CF_DIST_ID:
-    description: 'CF secret'
     required: true
   S3_BUCKET:
-    description: 'S3 secret'
     required: true  
 
 runs:
@@ -34,12 +32,6 @@ runs:
       with:
         role-to-assume: ${{ env.AWS_IAM_ROLE }}
         aws-region: ap-northeast-1
-
-    - name: Deploy env
-      shell: bash
-      run: |
-        echo "Secret CF dist ${{inputs.CF_DIST_ID}}"
-        echo "Secret S3 dist ${{inputs.S3_BUCKET}}"
 
     - name: Deploy static site to S3 bucket
       shell: bash

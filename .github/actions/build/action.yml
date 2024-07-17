@@ -2,7 +2,6 @@ name: "build"
 description: "build action"
 inputs:
   CLIENT_ID:
-    description: 'Client id'
     required: true
 
 runs:
