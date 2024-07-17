@@ -20,6 +20,8 @@ jobs:
       CLIENT_ID: ${{ steps.extract_client_id.outputs.CLIENT_ID }}
       CF_DIST_ID: ${{ steps.extract_variable.outputs.CF_DIST_ID }}
       S3_BUCKET: ${{ steps.extract_variable.outputs.S3_BUCKET }}
+      TEST: LALALA
+
     steps:
       - name: Extract client Id
         id: extract_client_id
@@ -33,7 +35,6 @@ jobs:
       - name: Extract variable from tag
         id: extract_variable
         run: |
-          echo "kaslfkl;asfkl;asfkl; ${{format('{0}_CF_DIST_ID', env.CLIENT_ID)}}"
           CF_DIST_ID=${{ vars[format('{0}_CF_DIST_ID', env.CLIENT_ID)] }}
           echo "CF_DIST_ID=$CF_DIST_ID" >> "$GITHUB_OUTPUT"
           S3_BUCKET=${{ vars[format('{0}_S3_BUCKET', env.CLIENT_ID)] }}
@@ -46,6 +47,10 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Check env CLIENT_ID
+        run: echo "The value of MY_ENV_VAR is  ${{ needs.prebuild.outputs.CLIENT_ID }} AND ${{ needs.prebuild.outputs.TEST }}"       
+
       - uses: ./.github/actions/build
         with:
           CLIENT_ID: ${{ needs.prebuild.outputs.CLIENT_ID }}
@@ -58,8 +63,8 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Access environment variable
-        run: echo "The value of MY_ENV_VAR is $GITHUB_ENV and $S3_BUCKET"
+      - name: Check env CF_DIST_ID and S3_BUCKET
+        run: echo "The value of MY_ENV_VAR is  ${{ needs.prebuild.outputs.CF_DIST_ID }} and ${{ needs.prebuild.outputs.S3_BUCKET }}"
            
       - uses: ./.github/actions/deploy
         with:
