@@ -25,7 +25,7 @@ runs:
       run: |
         echo "Client is  ${{inputs.CLIENT_ID}}"
         pnpm install
-        pnpm build:${{env.BUILD_MODE}}
+        pnpm build ${{inputs.CLIENT_ID}} ${{env.BUILD_MODE}}
         ls -l dist
 
     - name: Upload artifact

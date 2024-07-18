@@ -29,7 +29,6 @@ jobs:
           CLIENT_ID_UPPER=$(echo $CLIENT_ID | tr '[:lower:]' '[:upper:]')
           echo "CLIENT_ID=$CLIENT_ID_UPPER" >> "$GITHUB_ENV"
           echo "CLIENT_ID=$CLIENT_ID_UPPER" >> "$GITHUB_OUTPUT"
-          echo "test=hello" >> "$GITHUB_OUTPUT"
 
       - id: extract_variable
         run: |
