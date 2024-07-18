@@ -20,15 +20,12 @@ runs:
         node-version: "20.3"
         cache: "pnpm"
 
-    - name: LOG CLIENT ID 
-      shell: bash
-      run: echo "Client id is ${{inputs.CLIENT_ID}}"    
-
-    - name: Build
+    - name: Build for ${{inputs.CLIENT_ID}} in ${{env.BUILD_MODE}} 
       shell: bash
       run: |
+        echo "Client is  ${{inputs.CLIENT_ID}}"
         pnpm install
-        pnpm build
+        pnpm build:${{env.BUILD_MODE}}
         ls -l dist
 
     - name: Upload artifact

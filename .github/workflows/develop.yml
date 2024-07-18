@@ -11,6 +11,7 @@ permissions:
 
 env:
   AWS_IAM_ROLE: ${{ secrets.AWS_IAM_ROLE }}
+  BUILD_MODE: "dev"
 
 jobs:
   prebuild:
