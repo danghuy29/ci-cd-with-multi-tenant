@@ -60,5 +60,5 @@ jobs:
       - uses: ./.github/actions/deploy
         with:
           CF_DIST_ID: ${{needs.prebuild.outputs.CF_DIST_ID}}
-          S3_BUCKET:
-            ${{needs.prebuild.outputs.S3_BUCKET}}
+          S3_BUCKET: ${{needs.prebuild.outputs.S3_BUCKET}}
+          CLIENT_ID: ${{needs.prebuild.outputs.CLIENT_ID}}
