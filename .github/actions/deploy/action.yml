@@ -37,6 +37,7 @@ runs:
 
     - name: Retrieve secret from AWS Secrets Manager
       id: get-secret
+      shell: bash
       run: |
         SECRET=$(aws secretsmanager get-secret-value --secret-id your-secret-id --query SecretString --output text)
         echo "SECRET=$SECRET" >> $GITHUB_ENV  
