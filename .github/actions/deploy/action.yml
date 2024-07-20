@@ -50,9 +50,8 @@ runs:
     - name: Log secrets
       shell: bash
       run: | 
-        echo "Using secrets: $LAPUTA_CF_DIST_ID"          
-        echo "Using secrets: $FINA_CF_DIST_ID"          
-        echo "Using secrets: $LAPUTA_S3_BUCKET"          
+        echo "Using secrets: ${{env.SECRET}}"               
+        echo "Using secrets: ${{env.SECRET.LAPUTA_CF_DIST_ID}}"               
         echo "Using client: ${{inputs.CLIENT_ID}}"          
 
     - name: Deploy static site to S3 bucket
