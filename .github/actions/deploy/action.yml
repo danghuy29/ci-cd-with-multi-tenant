@@ -42,19 +42,32 @@ runs:
         SECRET=$(aws secretsmanager get-secret-value --secret-id multiTenantEnv --query SecretString --output text)
         echo "SECRET=$SECRET" >> $GITHUB_ENV
 
-    - name: Print secret
-      shell: bash
+    - id: extract_variable
       run: |
-        echo "The value of the secret is: $SECRET_VALUE"    
+        CF_DIST_ID_KEY=${{ vars[format('{0}_CF_DIST_ID', inputs.CLIENT_ID)] }}
+        echo "CF_DIST_ID_KEY=$CF_DIST_ID_KEY" >> "$GITHUB_OUTPUT"
+        S3_BUCKET_KEY=${{ vars[format('{0}_S3_BUCKET', inputs.CLIENT_ID)] }}
+        echo "S3_BUCKET_KEY=$S3_BUCKET_KEY" >> "$GITHUB_OUTPUT"
 
     - name: Log secrets
       shell: bash
       run: | 
         echo "Using secrets: $SECRET"               
-        echo "Using secrets: ${{env.SECRET.LAPUTA_CF_DIST_ID}}"     
-        echo "LAPUTA_CF_DIST_ID: $(echo $SECRET | jq -r '.LAPUTA_CF_DIST_ID')"
-          
-        echo "Using client: ${{inputs.CLIENT_ID}}"          
+        echo "Using S3_BUCKET_KEY: $S3_BUCKET_KEY"     
+        echo "Using S3_BUCKET_KEY: $CF_DIST_ID_KEY"     
+
+        echo "CF_DIST_ID: $(echo $SECRET | jq -r --arg key "$CF_DIST_ID_KEY")"
+        echo "S3_BUCKET: $(echo $SECRET | jq -r --arg key "$S3_BUCKET_KEY")"
+
+        echo "CF_DIST_ID=$CF_DIST_ID" >> "$GITHUB_OUTPUT"
+        echo "S3_BUCKET=$S3_BUCKET" >> "$GITHUB_OUTPUT"
+        echo "Using client: ${{inputs.CLIENT_ID}}"     
+
+    - name: Log env
+      shell: bash   
+      run: |
+        echo "S3 env is $S3_BUCKET"          
+        echo "CF env is $CF_DIST_ID"          
 
     - name: Deploy static site to S3 bucket
       shell: bash
