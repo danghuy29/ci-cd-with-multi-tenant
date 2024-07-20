@@ -38,8 +38,19 @@ runs:
     - name: Step name
       uses: aws-actions/aws-secretsmanager-get-secrets@v2
       with:
-        secret-ids: |
-          multiTenantEnv      
+        secret-ids: multiTenantEnv
+        name-transformation: none  # Options: uppercase, lowercase, none
+
+
+    - name: Set secret as environment variable
+      shell: bash
+      run: | 
+        echo "SECRET_VALUE=${{ steps.get-secret.outputs.multiTenantEnv }}" >> $GITHUB_ENV
+
+    - name: Print secret
+      shell: bash
+      run: |
+        echo "The value of the secret is: $SECRET_VALUE"    
 
     - name: Log secrets
       shell: bash
