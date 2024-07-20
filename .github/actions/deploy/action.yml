@@ -45,8 +45,8 @@ runs:
     - name: Log secrets
       shell: bash
       run: | 
-        CF_DIST_ID_KEY=${{ inputs.CLIENT_ID }}_CF_DIST_ID
-        S3_BUCKET_KEY=${{ inputs.CLIENT_ID }}_S3_BUCKET
+        CF_DIST_ID_KEY=LAPUTA_CF_DIST_ID
+        S3_BUCKET_KEY=LAPUTA_S3_BUCKET
         echo "Using S3_BUCKET_KEY: $S3_BUCKET_KEY"     
         echo "Using CF_DIST_ID_KEY: $CF_DIST_ID_KEY"     
 
