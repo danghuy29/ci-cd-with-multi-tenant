@@ -43,6 +43,7 @@ runs:
         echo "SECRET=$SECRET" >> $GITHUB_ENV
 
     - id: extract_variable
+      shell: bash
       run: |
         CF_DIST_ID_KEY=${{ format('{0}_CF_DIST_ID', inputs.CLIENT_ID) }}
         echo "CF_DIST_ID_KEY=$CF_DIST_ID_KEY" >> "$GITHUB_OUTPUT"
