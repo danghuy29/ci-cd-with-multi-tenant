@@ -35,17 +35,18 @@ runs:
         role-to-assume: ${{ env.AWS_IAM_ROLE }}
         aws-region: ap-northeast-1
 
-    - name: Retrieve secret from AWS Secrets Manager
-      id: get-secret
-      shell: bash
-      run: |
-        SECRET=$(aws secretsmanager get-secret-value multiTenantEnv --query SecretString --output text)
-        echo "SECRET=$SECRET" >> $GITHUB_ENV  
+    - name: Step name
+      uses: aws-actions/aws-secretsmanager-get-secrets@v2
+      with:
+        secret-ids: |
+          multiTenantEnv      
 
     - name: Log secrets
       shell: bash
       run: | 
-        echo "Using secrets: $SECRET"          
+        echo "Using secrets: $LAPUTA_CF_DIST_ID"          
+        echo "Using secrets: $FINA_CF_DIST_ID"          
+        echo "Using secrets: $LAPUTA_S3_BUCKET"          
         echo "Using client: ${{inputs.CLIENT_ID}}"          
 
     - name: Deploy static site to S3 bucket
