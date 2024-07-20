@@ -40,10 +40,6 @@ runs:
       shell: bash
       run: |
         SECRET=$(aws secretsmanager get-secret-value --secret-id multiTenantEnv --query SecretString --output text)
-        LAPUTA_CF_DIST_ID=$(echo $SECRET_JSON | jq -r '.LAPUTA_CF_DIST_ID')
-        FINA_CF_DIST_ID=$(echo $SECRET_JSON | jq -r '.FINA_CF_DIST_ID')
-        echo "LAPUTA_CF_DIST_ID=$LAPUTA_CF_DIST_ID" >> $GITHUB_ENV
-        echo "FINA_CF_DIST_ID=$FINA_CF_DIST_ID" >> $GITHUB_ENV
         echo "SECRET=$SECRET" >> $GITHUB_ENV
 
     - name: Print secret
