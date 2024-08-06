@@ -11,6 +11,9 @@ permissions:
 
 env:
   AWS_IAM_ROLE: ${{ secrets.AWS_IAM_ROLE }}
+  AWS_IAM: 583388259455
+  AWS_DEFAULT_REGION: us-east-1
+
 
 jobs:
   prebuild:
@@ -32,6 +35,16 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+            role-to-assume: arn:aws:iam::${{ env.AWS_IAM }}:role/github-actions-role
+            aws-region: ${{ env.AWS_DEFAULT_REGION }}
+      - name: Get secrets from AWS Secrets Manager
+        run: |
+            SECRETS=$(aws secretsmanager get-secret-value --secret-id FAA-dev-secret --query SecretString --output text)
+            echo "$SECRETS" | jq .
   
       - uses: ./.github/actions/build
         with:
