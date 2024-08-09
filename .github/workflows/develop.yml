@@ -11,8 +11,11 @@ permissions:
 
 env:
   AWS_IAM_ROLE: ${{ secrets.AWS_IAM_ROLE }}
-  AWS_IAM: 583388259455
+  AWS_IAM: 163945472220
   AWS_DEFAULT_REGION: ap-southeast-1
+  APP_ID: e0b74hp
+  ENV_ID: vd8ye42
+  CONFIG_ID: vmylxxn
   # FSTANDARD_CF_DIST_ID: 'E180JSU5L1WAE9'
   # FSTANDARD_S3_BUCKET: 's3://s3-cicd-github-bucket'
   # FINATEXTHD_CF_DIST_ID: 'E11F5KND1G7976'
@@ -63,13 +66,35 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::${{ env.AWS_IAM }}:role/test-get-secrets
+          role-to-assume: arn:aws:iam::${{ env.AWS_IAM }}:role/faa-appconfig-role
           aws-region: ${{ env.AWS_DEFAULT_REGION }}
-      - name: Get secrets from AWS Secrets Manager
+
+      - name: Fetch AppConfig data
         run: |
-          SECRETS=$(aws secretsmanager get-secret-value --secret-id multiTenantEnv --query SecretString --output text)
-          echo "$SECRETS" | jq .
-          echo "$SECRETS" | jq -r 'to_entries[] | "\(.key)=\(.value)"' >> $GITHUB_ENV
+          TEMP_FILE=$(mktemp)
+    
+          aws appconfig get-configuration \
+            --application $APP_ID \
+            --environment $ENV_ID \
+            --configuration $CONFIG_ID \
+            --client-id GitHub-Action-${GITHUB_RUN_ID} \
+            $TEMP_FILE
+          
+          CONFIG_CONTENT=$(cat $TEMP_FILE)
+          echo "Raw config content:"
+          echo "$CONFIG_CONTENT"
+          
+          # Lưu vào biến môi trường
+          echo "APP_CONFIG<<EOF" >> $GITHUB_ENV
+          echo "$CONFIG_CONTENT" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+          
+          rm $TEMP_FILE
+      # - name: Get secrets from AWS Secrets Manager
+      #   run: |
+      #     SECRETS=$(aws secretsmanager get-secret-value --secret-id multiTenantEnv --query SecretString --output text)
+      #     echo "$SECRETS" | jq .
+      #     echo "$SECRETS" | jq -r 'to_entries[] | "\(.key)=\(.value)"' >> $GITHUB_ENV
       - id: extractDeployEnv
         run: |
           CF_DIST_ID=${{env[format('{0}_CF_DIST_ID', env.CLIENT_ID_UPPER)]}}
